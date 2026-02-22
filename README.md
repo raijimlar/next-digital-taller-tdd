@@ -3,7 +3,7 @@
 
 ## Contexto
 
-Ejercicio práctico realizado como parte del taller de TDD impartido por [Next Digital](https://nextdigital.es/) en colaboración con la Universidad de Sevilla
+Ejercicio práctico realizado como parte del taller de TDD impartido por [Next Digital](https://nextdigital.es/) en colaboración con la Universidad de Sevilla.
 
 ## Enunciado
 
@@ -20,38 +20,71 @@ Implementar un sistema de puntuación de tenis con las siguientes reglas:
 ### Puntuación de un partido (match)
 - El partido lo gana el primero que consiga **4 juegos** con al menos **2 juegos de ventaja** sobre el oponente.
 
+## Decisiones de diseño
+
+### Nomenclatura de empates
+He decidido usar el sufijo **"All"** para empates en puntuación normal (ej. `"Love-All"`, `"Fifteen-All"`, `"Thirty-All"`) en lugar de repetir el nombre (ej. ~~"Love-Love"~~).
+
+### Modelo de puntuación interno
+- La puntuación interna es **acumulativa**: los puntos no se resetean al volver a Deuce (ej. un juego con muchos Deuces puede tener puntuación interna 10-8).
+- De esta forma no se pierde información.
+- `fromScore()` acepta puntuaciones arbitrariamente altas siempre que sean lógicamente válidas (ej. `9-8` = Advantage tras muchos Deuces).
+- Se validan las puntuaciones imposibles (ej. `7-3` no es válido porque el jugador ya habría ganado con `5-3`).
+- Las reglas de victoria son las mismas para **juegos** y para el **partido**: necesitar al menos 4 y al menos 2 de ventaja.
+
 ## Test Cases
 
-| 0-0 | love-love          |
-|-----|--------------------|
-| 1-0 | fifteen-love       |
-| 2-0 | thirty-love        |
-| 3-0 | forty-love         |
-| 0-1 | love-fifteen       |
-| 0-2 | love-thirty        |
-| ... |                    |
-| 3-3 | deuce              |
-| 4-3 | Advantage player 1 |
-| 3-4 | Advantage player 2 |
-| 5-3 | player 1 wins      |
-| 3-5 | player 2 wins      |
+| Puntuación | Resultado              |
+|------------|------------------------|
+| 0-0        | Love-All               |
+| 1-0        | Fifteen-Love           |
+| 2-0        | Thirty-Love            |
+| 3-0        | Forty-Love             |
+| 0-1        | Love-Fifteen           |
+| 0-2        | Love-Thirty            |
+| ...        |                        |
+| 3-3        | Deuce                  |
+| 4-3        | Advantage Player 1     |
+| 3-4        | Advantage Player 2     |
+| 5-3        | Player 1 wins          |
+| 3-5        | Player 2 wins          |
 
-### Basic Scoring
-- `shouldReturnLoveLove_OnStart()` → Score is "Love-All" at start.
-- `testPlayerOneScoresOnce_ShouldBeFifteenLove()` → "Fifteen-Love".
-- `testPlayerTwoScoresOnce_ShouldBeLoveFifteen()` → "Love-Fifteen".
-- `testBothPlayersScoreOnce_ShouldBeFifteenAll()` → "Fifteen-All".
-- `testPlayerOneScoresTwice_ShouldBeThirtyLove()` → "Thirty-Love".
-- `testPlayerTwoScoresTwice_ShouldBeLoveThirty()` → "Love-Thirty".
+### Estructura de tests
 
-### Deuce and Advantage
-- `testScoreIsFortyAll_ShouldBeDeuce()` → "Deuce".
-- `testPlayerOneAdvantageAfterDeuce_ShouldBeAdvantagePlayerOne()` → "Advantage Player 1".
-- `testPlayerTwoAdvantageAfterDeuce_ShouldBeAdvantagePlayerTwo()` → "Advantage Player 2".
-- `testPlayerOneWinsAfterAdvantage_ShouldBeWinPlayerOne()` → "Player 1 wins".
-- `testPlayerTwoWinsAfterAdvantage_ShouldBeWinPlayerTwo()` → "Player 2 wins".
-- `testAdvantageLost_BackToDeuce()` → "Deuce" if the player with Advantage loses the next point.
+| Clase de test               | Tipo        | Clase bajo test       |
+|-----------------------------|-------------|-----------------------|
+| `PlayerTest`                | Unitario    | `Player`              |
+| `PointNameTranslatorTest`   | Unitario    | `PointNameTranslator` |
+| `NormalScoreStateTest`      | Unitario    | `NormalScoreState`    |
+| `DeuceScoreStateTest`       | Unitario    | `DeuceScoreState`     |
+| `AdvantageScoreStateTest`   | Unitario    | `AdvantageScoreState` |
+| `WinScoreStateTest`         | Unitario    | `WinScoreState`       |
+| `ScoreStateResolverTest`    | Unitario    | `ScoreStateResolver`  |
+| `ScoreValidatorTest`        | Unitario    | `ScoreValidator`      |
+| `TennisGameTest`            | Unitario    | `TennisGame`          |
+| `TennisMatchTest`           | Unitario    | `TennisMatch`         |
+| `TennisGameMockTest`        | Mock        | `TennisGame`          |
+| `TennisAppTest`             | Unitario    | `TennisApp`           |
+| `GameFlowIntegrationTest`   | Integración | `TennisGame`          |
+| `MatchFlowIntegrationTest`  | Integración | `TennisMatch`         |
 
-### Winning the Game
-- `testPlayerOneWinsByTwoPoints_ShouldBeWinPlayerOne()` → "Player 1 wins".
-- `testPlayerTwoWinsByTwoPoints_ShouldBeWinPlayerTwo()` → "Player 2 wins".
+## Extra: Interfaz de consola (`TennisApp`)
+
+Como extra y para poder "testear manualmente", he añadido una aplicación de consola interactiva.
+
+1. **Jugar un partido nuevo** — introduce nombres y marca puntos con `1` / `2`.
+2. **Traducir puntuación** — convierte puntos numéricos (ej. 2-1) a terminología de tenis (Thirty-Fifteen).
+3. **Reanudar un partido** — introduce un marcador parcial (juegos + puntos) y continúa jugando.
+
+La clase valida entradas no numéricas y marcadores inválidos.
+Se testea redirigiendo `System.in` / `System.out`.
+
+## Ejecución
+
+```bash
+mvn test          # Ejecutar tests
+
+mvn verify        # Tests + cobertura Jacoco
+
+mvn exec:java     # Lanzar consola interactiva
+```
