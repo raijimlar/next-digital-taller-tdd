@@ -4,9 +4,7 @@ public class WinScoreState implements IScoreState {
 
     @Override
     public boolean applies(Player player1, Player player2) {
-        int p1 = player1.getPoints();
-        int p2 = player2.getPoints();
-        return (p1 >= 4 || p2 >= 4) && Math.abs(p1 - p2) >= 2;
+        return ScoreValidator.isGameOver(player1.getPoints(), player2.getPoints());
     }
 
     @Override

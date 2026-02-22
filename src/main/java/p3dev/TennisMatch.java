@@ -81,7 +81,7 @@ public class TennisMatch {
     }
 
     public boolean isMatchOver() {
-        return ScoreValidator.isOver(player1Games, player2Games);
+        return ScoreValidator.isMatchOver(player1Games, player2Games);
     }
 
     public String getMatchWinner() {
