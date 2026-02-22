@@ -138,7 +138,8 @@ public class ScoreValidatorTest {
 
     static Stream<Arguments> invalidMatchStateProvider() {
         return Stream.of(
-            Arguments.of(4, 2, 1, 0),
+            Arguments.of(4, 2, 1, 0),   // match over, p1Points != 0
+            Arguments.of(4, 2, 0, 1),   // match over, p1Points == 0 but p2Points != 0
             Arguments.of(7, 3, 0, 0),
             Arguments.of(2, 1, 7, 3),
             Arguments.of(2, 1, 4, 2)

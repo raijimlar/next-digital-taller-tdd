@@ -161,6 +161,7 @@ public class TennisMatchTest {
         return Stream.of(
                 Arguments.of(0, 0, 0, 0, "Games: 0-0 | Love-All"),
                 Arguments.of(2, 1, 3, 2, "Games: 2-1 | Forty-Thirty"),
+                Arguments.of(2, 1, 0, 2, "Games: 2-1 | Love-Thirty"),  // p1Points=0, p2Points>0
                 Arguments.of(3, 3, 0, 0, "Games: 3-3 | Love-All"),
                 Arguments.of(4, 2, 0, 0, "Games: 4-2 | Player 1 wins the match")
         );

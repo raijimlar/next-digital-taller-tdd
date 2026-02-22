@@ -89,7 +89,8 @@ public class NormalScoreStateTest {
                 Arguments.of(3, 3),
                 Arguments.of(4, 3),
                 Arguments.of(4, 0),
-                Arguments.of(5, 5)
+                Arguments.of(5, 5),
+                Arguments.of(2, 4)  // p1 valid, p2 > 3
         );
     }
 
