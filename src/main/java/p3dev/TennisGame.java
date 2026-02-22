@@ -32,18 +32,27 @@ public class TennisGame {
         return new TennisGame(new Player(player1Name, p1Points), new Player(player2Name, p2Points));
     }
 
-    public void playerOneScores() {
+    public void scorePoint(int playerNumber) {
         if (isGameOver()) {
             throw new IllegalStateException("Cannot score: game is already over");
         }
-        player1.scorePoint();
+        getPlayer(playerNumber).scorePoint();
+    }
+
+    public void playerOneScores() {
+        scorePoint(1);
     }
 
     public void playerTwoScores() {
-        if (isGameOver()) {
-            throw new IllegalStateException("Cannot score: game is already over");
-        }
-        player2.scorePoint();
+        scorePoint(2);
+    }
+
+    private Player getPlayer(int playerNumber) {
+        return switch (playerNumber) {
+            case 1 -> player1;
+            case 2 -> player2;
+            default -> throw new IllegalArgumentException("Player number must be 1 or 2, got: " + playerNumber);
+        };
     }
 
     public String getScore() {

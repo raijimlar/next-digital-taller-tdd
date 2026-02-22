@@ -32,20 +32,20 @@ public class TennisMatch {
         return match;
     }
 
-    public void playerOneScores() {
+    public void scorePoint(int playerNumber) {
         if (isMatchOver()) {
             throw new IllegalStateException("Cannot score: match is already over");
         }
-        currentGame.playerOneScores();
+        currentGame.scorePoint(playerNumber);
         checkAndAdvanceGame();
     }
 
+    public void playerOneScores() {
+        scorePoint(1);
+    }
+
     public void playerTwoScores() {
-        if (isMatchOver()) {
-            throw new IllegalStateException("Cannot score: match is already over");
-        }
-        currentGame.playerTwoScores();
-        checkAndAdvanceGame();
+        scorePoint(2);
     }
 
     private void checkAndAdvanceGame() {
