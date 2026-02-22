@@ -12,6 +12,12 @@ public class TennisGame {
         this.stateResolver = createDefaultResolver();
     }
 
+    public TennisGame(Player player1, Player player2, ScoreStateResolver stateResolver) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.stateResolver = stateResolver;
+    }
+
     public void playerOneScores() {
         player1.scorePoint();
     }
@@ -23,6 +29,17 @@ public class TennisGame {
     public String getScore() {
         IScoreState state = stateResolver.resolve(player1, player2);
         return state.getScore(player1, player2);
+    }
+
+    public boolean isGameOver() {
+        return stateResolver.resolve(player1, player2).isTerminal();
+    }
+
+    public String getGameWinner() {
+        if (!isGameOver()) {
+            return null;
+        }
+        return player1.getPoints() > player2.getPoints() ? player1.getName() : player2.getName();
     }
 
     private static ScoreStateResolver createDefaultResolver() {
