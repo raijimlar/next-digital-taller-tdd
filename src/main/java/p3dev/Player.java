@@ -1,17 +1,24 @@
 package p3dev;
 
 public class Player {
+
+    private final String name;
+    private int points;
+
     public Player(String name) {
+        this.name = name;
+        this.points = 0;
     }
 
     public String getName() {
-        return "";
+        return name;
     }
 
     public int getPoints() {
-        return 0;
+        return points;
     }
 
     public void scorePoint() {
+        this.points++;
     }
 }
