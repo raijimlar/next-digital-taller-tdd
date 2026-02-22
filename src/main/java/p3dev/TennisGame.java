@@ -18,11 +18,31 @@ public class TennisGame {
         this.stateResolver = stateResolver;
     }
 
+    private TennisGame(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.stateResolver = createDefaultResolver();
+    }
+
+    /**
+     * @throws InvalidScoreException si la puntuación no es válida
+     */
+    public static TennisGame fromScore(String player1Name, String player2Name, int p1Points, int p2Points) {
+        ScoreValidator.validateGameScore(p1Points, p2Points);
+        return new TennisGame(new Player(player1Name, p1Points), new Player(player2Name, p2Points));
+    }
+
     public void playerOneScores() {
+        if (isGameOver()) {
+            throw new IllegalStateException("Cannot score: game is already over");
+        }
         player1.scorePoint();
     }
 
     public void playerTwoScores() {
+        if (isGameOver()) {
+            throw new IllegalStateException("Cannot score: game is already over");
+        }
         player2.scorePoint();
     }
 

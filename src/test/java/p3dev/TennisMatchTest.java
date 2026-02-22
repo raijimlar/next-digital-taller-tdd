@@ -13,10 +13,8 @@ public class TennisMatchTest {
 
     @Test
     void should_start_with_zero_games() {
-        // Arrange
-        TennisMatch match = new TennisMatch("Player 1", "Player 2");
 
-        // Assert
+        TennisMatch match = new TennisMatch("Player 1", "Player 2");
         assertEquals(0, match.getPlayer1Games());
         assertEquals(0, match.getPlayer2Games());
         assertEquals("Games: 0-0", match.getMatchScore());
@@ -24,43 +22,28 @@ public class TennisMatchTest {
 
     @Test
     void should_increment_games_when_player_one_wins_a_game() {
-        // Arrange
         TennisMatch match = new TennisMatch("Player 1", "Player 2");
-
-        // Act: Player 1 wins a game (4 straight points)
         winGameForPlayerOne(match);
-
-        // Assert
         assertEquals(1, match.getPlayer1Games());
         assertEquals(0, match.getPlayer2Games());
     }
 
     @Test
     void should_increment_games_when_player_two_wins_a_game() {
-        // Arrange
+
         TennisMatch match = new TennisMatch("Player 1", "Player 2");
-
-        // Act: Player 2 wins a game (4 straight points)
         winGameForPlayerTwo(match);
-
-        // Assert
         assertEquals(0, match.getPlayer1Games());
         assertEquals(1, match.getPlayer2Games());
     }
 
     @Test
     void should_start_new_game_after_game_won() {
-        // Arrange
+
         TennisMatch match = new TennisMatch("Player 1", "Player 2");
-
-        // Act: Player 1 wins first game
         winGameForPlayerOne(match);
-
-        // Assert: new game starts at Love-All
         assertEquals("Love-All", match.getGameScore());
     }
-
-    // --- Match winning ---
 
     @Test
     void should_detect_match_win_with_straight_games() {
@@ -139,8 +122,8 @@ public class TennisMatchTest {
         }
 
         // Act & Assert
-        assertThrows(IllegalStateException.class, () -> match.playerOneScores());
-        assertThrows(IllegalStateException.class, () -> match.playerTwoScores());
+        assertThrows(IllegalStateException.class, match::playerOneScores);
+        assertThrows(IllegalStateException.class, match::playerTwoScores);
     }
 
     @Test
@@ -154,8 +137,6 @@ public class TennisMatchTest {
         // Assert
         assertEquals("Match over", match.getGameScore());
     }
-
-    // --- Factory method fromScore ---
 
     static Stream<Arguments> validFromScoreProvider() {
         return Stream.of(
@@ -173,22 +154,17 @@ public class TennisMatchTest {
         TennisMatch match = TennisMatch.fromScore("Player 1", "Player 2", g1, g2, p1, p2);
 
         // Assert
-        assertNotNull(match);
         assertEquals(expected, match.getFullScore());
     }
 
     @Test
     void should_throw_on_invalid_fromScore() {
-        // 7-3 in games is impossible
         assertThrows(InvalidScoreException.class,
                 () -> TennisMatch.fromScore("P1", "P2", 7, 3, 0, 0));
 
-        // Match over but game in progress
         assertThrows(InvalidScoreException.class,
                 () -> TennisMatch.fromScore("P1", "P2", 4, 2, 1, 0));
     }
-
-    // --- Helpers ---
 
     private void winGameForPlayerOne(TennisMatch match) {
         for (int i = 0; i < 4; i++) {

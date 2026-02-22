@@ -12,28 +12,19 @@ public class DeuceAndAdvantageTest {
 
     static Stream<Arguments> deuceProvider() {
         return Stream.of(
-                // 3-3 → Deuce
                 Arguments.of(3, 3, "Deuce"),
-                // 4-4 → Deuce (volvieron de advantage)
                 Arguments.of(4, 4, "Deuce"),
-                // 5-5 → Deuce (múltiples idas y vueltas)
                 Arguments.of(5, 5, "Deuce"),
-                // 10-10 → Deuce
                 Arguments.of(10, 10, "Deuce")
         );
     }
 
     static Stream<Arguments> advantageProvider() {
         return Stream.of(
-                // 4-3 → Advantage Player 1
                 Arguments.of(4, 3, "Advantage Player 1"),
-                // 3-4 → Advantage Player 2
                 Arguments.of(3, 4, "Advantage Player 2"),
-                // 5-4 → Advantage Player 1 (tras volver de deuce)
                 Arguments.of(5, 4, "Advantage Player 1"),
-                // 4-5 → Advantage Player 2
                 Arguments.of(4, 5, "Advantage Player 2"),
-                // 11-10 → Advantage Player 1
                 Arguments.of(11, 10, "Advantage Player 1")
         );
     }

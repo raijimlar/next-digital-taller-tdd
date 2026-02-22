@@ -10,6 +10,14 @@ public class Player {
         this.points = 0;
     }
 
+    Player(String name, int initialPoints) {
+        if (initialPoints < 0) {
+            throw new IllegalArgumentException("Points cannot be negative");
+        }
+        this.name = name;
+        this.points = initialPoints;
+    }
+
     public String getName() {
         return name;
     }

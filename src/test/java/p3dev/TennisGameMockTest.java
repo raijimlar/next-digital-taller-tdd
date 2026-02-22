@@ -8,11 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * Tests con Mockito.
- * Demuestra el uso de mocks para aislar la unidad bajo prueba (TennisGame)
- * de sus dependencias (ScoreStateResolver, IScoreState).
- */
 @ExtendWith(MockitoExtension.class)
 public class TennisGameMockTest {
 
@@ -66,6 +61,7 @@ public class TennisGameMockTest {
         Player player1 = new Player("Player 1");
         Player player2 = new Player("Player 2");
         TennisGame game = new TennisGame(player1, player2, mockResolver);
+        when(mockResolver.resolve(player1, player2)).thenReturn(mockState);
 
         // Act
         game.playerOneScores();
@@ -81,6 +77,7 @@ public class TennisGameMockTest {
         Player player1 = new Player("Player 1");
         Player player2 = new Player("Player 2");
         TennisGame game = new TennisGame(player1, player2, mockResolver);
+        when(mockResolver.resolve(player1, player2)).thenReturn(mockState);
 
         // Act
         game.playerTwoScores();

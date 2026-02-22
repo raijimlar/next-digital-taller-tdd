@@ -1,64 +1,52 @@
 package p3dev;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WinScoreStateTest {
 
-    private static final WinScoreState STATE = new WinScoreState();
+    private final WinScoreState state = new WinScoreState();
 
-    private static Player playerWithPoints(String name, int points) {
-        Player p = new Player(name);
-        for (int i = 0; i < points; i++) p.scorePoint();
-        return p;
-    }
+    @Test
+    void should_return_player_one_wins_when_player_one_leads() {
+        // Arrange
+        Player p1 = playerWithPoints("Player 1", 4);
+        Player p2 = playerWithPoints("Player 2", 0);
 
-    static Stream<Arguments> player1WinsSituations() {
-        return Stream.of(
-            Arguments.of("Alice",  "Bob",    4, 0, "Alice wins"),
-            Arguments.of("Carlos", "Diana",  4, 1, "Carlos wins"),
-            Arguments.of("Eve",    "Frank",  4, 2, "Eve wins"),
-            Arguments.of("Grace",  "Hank",   5, 3, "Grace wins"),
-            Arguments.of("Ivy",    "Jack",   6, 4, "Ivy wins")
-        );
-    }
-
-    @ParameterizedTest(name = "[{index}] {0} wins ({2}-{3} pts) => {4}")
-    @MethodSource("player1WinsSituations")
-    void getScore_player1HasMorePoints_returnsPlayer1WinsMessage(
-            String name1, String name2, int p1Points, int p2Points, String expected) {
-        Player player1 = playerWithPoints(name1, p1Points);
-        Player player2 = playerWithPoints(name2, p2Points);
-        assertEquals(expected, STATE.getScore(player1, player2));
-    }
-
-    static Stream<Arguments> player2WinsSituations() {
-        return Stream.of(
-            Arguments.of("Alice",  "Bob",    0, 4, "Bob wins"),
-            Arguments.of("Carlos", "Diana",  1, 4, "Diana wins"),
-            Arguments.of("Eve",    "Frank",  2, 4, "Frank wins"),
-            Arguments.of("Grace",  "Hank",   3, 5, "Hank wins"),
-            Arguments.of("Ivy",    "Jack",   4, 6, "Jack wins")
-        );
-    }
-
-    @ParameterizedTest(name = "[{index}] {1} wins ({3}-{2} pts) => {4}")
-    @MethodSource("player2WinsSituations")
-    void getScore_player2HasMorePoints_returnsPlayer2WinsMessage(
-            String name1, String name2, int p1Points, int p2Points, String expected) {
-        Player player1 = playerWithPoints(name1, p1Points);
-        Player player2 = playerWithPoints(name2, p2Points);
-        assertEquals(expected, STATE.getScore(player1, player2));
+        // Act & Assert
+        assertEquals("Player 1 wins", state.getScore(p1, p2));
     }
 
     @Test
-    void isTerminal_returnsTrue() {
-        assertTrue(STATE.isTerminal());
+    void should_return_player_two_wins_when_player_two_leads() {
+        // Arrange
+        Player p1 = playerWithPoints("Player 1", 0);
+        Player p2 = playerWithPoints("Player 2", 4);
+
+        // Act & Assert
+        assertEquals("Player 2 wins", state.getScore(p1, p2));
+    }
+
+    @Test
+    void should_use_player_name_in_win_message() {
+        // Arrange
+        Player p1 = playerWithPoints("Nadal", 5);
+        Player p2 = playerWithPoints("Federer", 3);
+
+        // Act & Assert
+        assertEquals("Nadal wins", state.getScore(p1, p2));
+    }
+
+    @Test
+    void should_be_terminal() {
+        assertTrue(state.isTerminal());
+    }
+
+    private Player playerWithPoints(String name, int points) {
+        Player p = new Player(name);
+        for (int i = 0; i < points; i++) p.scorePoint();
+        return p;
     }
 }

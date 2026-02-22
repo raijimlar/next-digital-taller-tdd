@@ -79,7 +79,7 @@ public class TennisGameExtendedTest {
         for (int i = 0; i < 4; i++) game.playerOneScores();
 
         // Act & Assert
-        assertThrows(IllegalStateException.class, () -> game.playerOneScores());
-        assertThrows(IllegalStateException.class, () -> game.playerTwoScores());
+        assertThrows(IllegalStateException.class, game::playerOneScores);
+        assertThrows(IllegalStateException.class, game::playerTwoScores);
     }
 }
