@@ -6,11 +6,13 @@ public class Player {
     private int points;
 
     public Player(String name) {
-        this.name = name;
-        this.points = 0;
+        this(name, 0);
     }
 
     Player(String name, int initialPoints) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Player name cannot be null or empty");
+        }
         if (initialPoints < 0) {
             throw new IllegalArgumentException("Points cannot be negative");
         }

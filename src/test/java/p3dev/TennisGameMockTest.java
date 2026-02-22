@@ -62,6 +62,7 @@ public class TennisGameMockTest {
         Player player2 = new Player("Player 2");
         TennisGame game = new TennisGame(player1, player2, mockResolver);
         when(mockResolver.resolve(player1, player2)).thenReturn(mockState);
+        when(mockState.isTerminal()).thenReturn(false);
 
         // Act
         game.playerOneScores();
@@ -78,6 +79,7 @@ public class TennisGameMockTest {
         Player player2 = new Player("Player 2");
         TennisGame game = new TennisGame(player1, player2, mockResolver);
         when(mockResolver.resolve(player1, player2)).thenReturn(mockState);
+        when(mockState.isTerminal()).thenReturn(false);
 
         // Act
         game.playerTwoScores();
