@@ -1,9 +1,14 @@
 package p3dev;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static p3dev.TestHelper.playerWithPoints;
 
 public class AdvantageScoreStateTest {
 
@@ -44,9 +49,42 @@ public class AdvantageScoreStateTest {
         assertFalse(state.isTerminal());
     }
 
-    private Player playerWithPoints(String name, int points) {
-        Player p = new Player(name);
-        for (int i = 0; i < points; i++) p.scorePoint();
-        return p;
+    static Stream<Arguments> validAdvantageProvider() {
+        return Stream.of(
+                Arguments.of(4, 3),
+                Arguments.of(3, 4),
+                Arguments.of(5, 4),
+                Arguments.of(4, 5),
+                Arguments.of(11, 10)
+        );
+    }
+
+    @ParameterizedTest(name = "applies({0},{1}) → true")
+    @MethodSource("validAdvantageProvider")
+    void should_apply_for_valid_advantage_scores(int p1, int p2) {
+        assertTrue(state.applies(playerWithPoints("P1", p1), playerWithPoints("P2", p2)));
+    }
+
+    static Stream<Arguments> invalidAdvantageProvider() {
+        return Stream.of(
+                Arguments.of(0, 0),
+                Arguments.of(3, 3),
+                Arguments.of(4, 2),
+                Arguments.of(5, 3),
+                Arguments.of(2, 1)
+        );
+    }
+
+    @ParameterizedTest(name = "applies({0},{1}) → false")
+    @MethodSource("invalidAdvantageProvider")
+    void should_not_apply_for_non_advantage_scores(int p1, int p2) {
+        assertFalse(state.applies(playerWithPoints("P1", p1), playerWithPoints("P2", p2)));
+    }
+
+    @Test
+    void should_throw_when_does_not_apply() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> state.getScore(playerWithPoints("P1", 5), playerWithPoints("P2", 3)));
     }
 }

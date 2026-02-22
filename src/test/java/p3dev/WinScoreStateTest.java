@@ -1,9 +1,14 @@
 package p3dev;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static p3dev.TestHelper.playerWithPoints;
 
 public class WinScoreStateTest {
 
@@ -44,9 +49,43 @@ public class WinScoreStateTest {
         assertTrue(state.isTerminal());
     }
 
-    private Player playerWithPoints(String name, int points) {
-        Player p = new Player(name);
-        for (int i = 0; i < points; i++) p.scorePoint();
-        return p;
+    static Stream<Arguments> validWinProvider() {
+        return Stream.of(
+                Arguments.of(4, 0),
+                Arguments.of(4, 2),
+                Arguments.of(0, 4),
+                Arguments.of(5, 3),
+                Arguments.of(3, 5),
+                Arguments.of(6, 4)
+        );
+    }
+
+    @ParameterizedTest(name = "applies({0},{1}) → true")
+    @MethodSource("validWinProvider")
+    void should_apply_for_valid_win_scores(int p1, int p2) {
+        assertTrue(state.applies(playerWithPoints("P1", p1), playerWithPoints("P2", p2)));
+    }
+
+    static Stream<Arguments> invalidWinProvider() {
+        return Stream.of(
+                Arguments.of(0, 0),
+                Arguments.of(3, 3),
+                Arguments.of(4, 3),
+                Arguments.of(3, 4),
+                Arguments.of(3, 0)
+        );
+    }
+
+    @ParameterizedTest(name = "applies({0},{1}) → false")
+    @MethodSource("invalidWinProvider")
+    void should_not_apply_for_non_win_scores(int p1, int p2) {
+        assertFalse(state.applies(playerWithPoints("P1", p1), playerWithPoints("P2", p2)));
+    }
+
+    @Test
+    void should_throw_when_does_not_apply() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> state.getScore(playerWithPoints("P1", 4), playerWithPoints("P2", 3)));
     }
 }
