@@ -62,7 +62,7 @@ public class TennisApp {
             System.out.println("\nMatch resumed: " + match.getFullScore());
 
             if (match.isMatchOver()) {
-                System.out.println(match.getMatchWinner() + " has already won!");
+                System.out.println(match.getMatchWinner().orElseThrow() + " has already won!");
                 return;
             }
 
@@ -108,6 +108,6 @@ public class TennisApp {
         }
 
         System.out.println("\n  " + match.getFullScore());
-        System.out.println("  Congratulations to " + match.getMatchWinner() + "!");
+        System.out.println("  Congratulations to " + match.getMatchWinner().orElseThrow() + "!");
     }
 }

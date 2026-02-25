@@ -1,5 +1,7 @@
 package p3dev;
 
+import java.util.Optional;
+
 public class TennisGame {
 
     private final Player player1;
@@ -12,7 +14,7 @@ public class TennisGame {
         this.stateResolver = createDefaultResolver();
     }
 
-    public TennisGame(Player player1, Player player2, ScoreStateResolver stateResolver) {
+    TennisGame(Player player1, Player player2, ScoreStateResolver stateResolver) {
         this.player1 = player1;
         this.player2 = player2;
         this.stateResolver = stateResolver;
@@ -56,7 +58,7 @@ public class TennisGame {
     }
 
     public String getScore() {
-        IScoreState state = stateResolver.resolve(player1, player2);
+        ScoreState state = stateResolver.resolve(player1, player2);
         return state.getScore(player1, player2);
     }
 
@@ -64,11 +66,11 @@ public class TennisGame {
         return stateResolver.resolve(player1, player2).isTerminal();
     }
 
-    public String getGameWinner() {
+    public Optional<String> getGameWinner() {
         if (!isGameOver()) {
-            return null;
+            return Optional.empty();
         }
-        return player1.getPoints() > player2.getPoints() ? player1.getName() : player2.getName();
+        return Optional.of(player1.getPoints() > player2.getPoints() ? player1.getName() : player2.getName());
     }
 
     private static ScoreStateResolver createDefaultResolver() {

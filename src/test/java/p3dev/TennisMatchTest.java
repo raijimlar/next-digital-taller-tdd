@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,7 +72,7 @@ public class TennisMatchTest {
 
         // Assert
         assertTrue(match.isMatchOver());
-        assertEquals("Player 1", match.getMatchWinner());
+        assertEquals(Optional.of("Player 1"), match.getMatchWinner());
         assertEquals("Games: 4-0 | Player 1 wins the match", match.getFullScore());
     }
 
@@ -85,7 +86,7 @@ public class TennisMatchTest {
 
         // Assert
         assertTrue(match.isMatchOver());
-        assertEquals("Player 2", match.getMatchWinner());
+        assertEquals(Optional.of("Player 2"), match.getMatchWinner());
     }
 
     @Test
@@ -102,7 +103,7 @@ public class TennisMatchTest {
 
         // Assert
         assertFalse(match.isMatchOver());
-        assertNull(match.getMatchWinner());
+        assertTrue(match.getMatchWinner().isEmpty());
     }
 
     @Test
@@ -120,10 +121,8 @@ public class TennisMatchTest {
 
         // Assert
         assertTrue(match.isMatchOver());
-        assertEquals("Player 1", match.getMatchWinner());
+        assertEquals(Optional.of("Player 1"), match.getMatchWinner());
     }
-
-    // --- Guards ---
 
     @Test
     void should_throw_when_player_one_scores_after_match_over() {
@@ -155,13 +154,11 @@ public class TennisMatchTest {
         assertEquals("Match over", match.getGameScore());
     }
 
-    // --- fromScore ---
-
     static Stream<Arguments> validFromScoreProvider() {
         return Stream.of(
                 Arguments.of(0, 0, 0, 0, "Games: 0-0 | Love-All"),
                 Arguments.of(2, 1, 3, 2, "Games: 2-1 | Forty-Thirty"),
-                Arguments.of(2, 1, 0, 2, "Games: 2-1 | Love-Thirty"),  // p1Points=0, p2Points>0
+                Arguments.of(2, 1, 0, 2, "Games: 2-1 | Love-Thirty"),
                 Arguments.of(3, 3, 0, 0, "Games: 3-3 | Love-All"),
                 Arguments.of(4, 2, 0, 0, "Games: 4-2 | Player 1 wins the match")
         );
@@ -191,8 +188,6 @@ public class TennisMatchTest {
         assertThrows(InvalidScoreException.class,
                 () -> TennisMatch.fromScore("P1", "P2", g1, g2, p1, p2));
     }
-
-    // --- scorePoint(int) ---
 
     @Test
     void should_score_via_scorePoint_for_player_1() {
@@ -231,9 +226,33 @@ public class TennisMatchTest {
     void should_throw_scorePoint_after_match_over() {
         // Arrange
         TennisMatch match = TennisMatch.fromScore("P1", "P2", 3, 2, 3, 0);
-        match.scorePoint(1); // wins game 4-2, match over
+        match.scorePoint(1);
 
         // Act & Assert
         assertThrows(IllegalStateException.class, () -> match.scorePoint(1));
+    }
+
+    @Test
+    void should_handle_extended_match_from_score() {
+        TennisMatch match = TennisMatch.fromScore("P1", "P2", 4, 4, 0, 0);
+        assertFalse(match.isMatchOver());
+        assertEquals("Games: 4-4 | Love-All", match.getFullScore());
+    }
+
+    @Test
+    void should_require_two_game_lead_to_win_match() {
+        TennisMatch match = TennisMatch.fromScore("P1", "P2", 4, 3, 0, 0);
+        assertFalse(match.isMatchOver());
+        assertTrue(match.getMatchWinner().isEmpty());
+    }
+
+    @Test
+    void should_win_extended_match_with_two_game_lead() {
+        TennisMatch match = TennisMatch.fromScore("P1", "P2", 4, 4, 0, 0);
+        winGameForPlayerOne(match);
+        assertFalse(match.isMatchOver());
+        winGameForPlayerOne(match);
+        assertTrue(match.isMatchOver());
+        assertEquals(Optional.of("P1"), match.getMatchWinner());
     }
 }

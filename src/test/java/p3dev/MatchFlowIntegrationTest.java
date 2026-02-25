@@ -2,6 +2,8 @@ package p3dev;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static p3dev.TestHelper.*;
 
@@ -35,7 +37,7 @@ public class MatchFlowIntegrationTest {
         scoreMatchPoints(match, 4, 0);
 
         assertTrue(match.isMatchOver());
-        assertEquals("Nadal", match.getMatchWinner());
+        assertEquals(Optional.of("Nadal"), match.getMatchWinner());
         assertEquals("Games: 4-1 | Nadal wins the match", match.getFullScore());
     }
 
@@ -65,7 +67,7 @@ public class MatchFlowIntegrationTest {
 
         scoreMatchPoints(match, 4, 0);
         assertTrue(match.isMatchOver());
-        assertEquals("Player 1", match.getMatchWinner());
+        assertEquals(Optional.of("Player 1"), match.getMatchWinner());
     }
 
     @Test
@@ -81,6 +83,6 @@ public class MatchFlowIntegrationTest {
 
         // Assert
         assertTrue(match.isMatchOver());
-        assertEquals("Player 1", match.getMatchWinner());
+        assertEquals(Optional.of("Player 1"), match.getMatchWinner());
     }
 }

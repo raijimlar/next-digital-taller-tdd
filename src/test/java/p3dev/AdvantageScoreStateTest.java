@@ -55,7 +55,10 @@ public class AdvantageScoreStateTest {
                 Arguments.of(3, 4),
                 Arguments.of(5, 4),
                 Arguments.of(4, 5),
-                Arguments.of(11, 10)
+                Arguments.of(11, 10),
+                Arguments.of(100, 99),
+                Arguments.of(99, 100),
+                Arguments.of(1000, 999)
         );
     }
 
@@ -71,7 +74,10 @@ public class AdvantageScoreStateTest {
                 Arguments.of(3, 3),
                 Arguments.of(4, 2),
                 Arguments.of(5, 3),
-                Arguments.of(2, 1)
+                Arguments.of(2, 1),
+                Arguments.of(100, 98),
+                Arguments.of(1000, 0),
+                Arguments.of(Integer.MAX_VALUE, 0)
         );
     }
 

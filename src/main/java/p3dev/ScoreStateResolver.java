@@ -2,17 +2,17 @@ package p3dev;
 
 public class ScoreStateResolver {
 
-    private final IScoreState[] states;
-    private final IScoreState defaultState;
+    private final ScoreState[] states;
+    private final ScoreState defaultState;
 
-    public ScoreStateResolver(IScoreState normalState, IScoreState deuceState,
-                              IScoreState advantageState, IScoreState winState) {
-        this.states = new IScoreState[]{winState, deuceState, advantageState};
+    public ScoreStateResolver(ScoreState normalState, ScoreState deuceState,
+                              ScoreState advantageState, ScoreState winState) {
+        this.states = new ScoreState[]{winState, deuceState, advantageState};
         this.defaultState = normalState;
     }
 
-    public IScoreState resolve(Player player1, Player player2) {
-        for (IScoreState state : states) {
+    public ScoreState resolve(Player player1, Player player2) {
+        for (ScoreState state : states) {
             if (state.applies(player1, player2)) {
                 return state;
             }

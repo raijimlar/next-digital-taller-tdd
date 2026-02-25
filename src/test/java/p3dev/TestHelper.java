@@ -6,11 +6,7 @@ public final class TestHelper {
     }
 
     public static Player playerWithPoints(String name, int points) {
-        Player p = new Player(name);
-        for (int i = 0; i < points; i++) {
-            p.scorePoint();
-        }
-        return p;
+        return new Player(name, points);
     }
 
     public static void scorePoints(TennisGame game, int p1, int p2) {

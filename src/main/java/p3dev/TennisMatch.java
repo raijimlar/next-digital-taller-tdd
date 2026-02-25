@@ -1,5 +1,7 @@
 package p3dev;
 
+import java.util.Optional;
+
 public class TennisMatch {
 
     private final String player1Name;
@@ -50,8 +52,8 @@ public class TennisMatch {
 
     private void checkAndAdvanceGame() {
         if (currentGame.isGameOver()) {
-            String winner = currentGame.getGameWinner();
-            if (winner.equals(player1Name)) {
+            String winner = currentGame.getGameWinner().orElseThrow();
+            if (player1Name.equals(winner)) {
                 player1Games++;
             } else {
                 player2Games++;
@@ -75,7 +77,7 @@ public class TennisMatch {
 
     public String getFullScore() {
         if (isMatchOver()) {
-            return getMatchScore() + " | " + getMatchWinner() + " wins the match";
+            return getMatchScore() + " | " + getMatchWinner().orElseThrow() + " wins the match";
         }
         return getMatchScore() + " | " + getGameScore();
     }
@@ -84,11 +86,11 @@ public class TennisMatch {
         return ScoreValidator.isMatchOver(player1Games, player2Games);
     }
 
-    public String getMatchWinner() {
+    public Optional<String> getMatchWinner() {
         if (!isMatchOver()) {
-            return null;
+            return Optional.empty();
         }
-        return player1Games > player2Games ? player1Name : player2Name;
+        return Optional.of(player1Games > player2Games ? player1Name : player2Name);
     }
 
     public int getPlayer1Games() {

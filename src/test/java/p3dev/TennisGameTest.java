@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -156,7 +157,7 @@ public class TennisGameTest {
     void should_not_be_over_at_start() {
         TennisGame game = new TennisGame("P1", "P2");
         assertFalse(game.isGameOver());
-        assertNull(game.getGameWinner());
+        assertTrue(game.getGameWinner().isEmpty());
     }
 
     @Test
@@ -167,7 +168,7 @@ public class TennisGameTest {
 
         // Assert
         assertTrue(game.isGameOver());
-        assertEquals("Player 1", game.getGameWinner());
+        assertEquals(Optional.of("Player 1"), game.getGameWinner());
     }
 
     @Test
@@ -243,5 +244,27 @@ public class TennisGameTest {
 
         // Act & Assert
         assertThrows(IllegalStateException.class, () -> game.scorePoint(1));
+    }
+    
+    @Test
+    void should_handle_fromScore_with_extreme_deuce() {
+        TennisGame game = TennisGame.fromScore("P1", "P2", 50, 50);
+        assertEquals("Deuce", game.getScore());
+        assertFalse(game.isGameOver());
+    }
+
+    @Test
+    void should_handle_fromScore_with_extreme_advantage() {
+        TennisGame game = TennisGame.fromScore("P1", "P2", 100, 99);
+        assertEquals("Advantage P1", game.getScore());
+        assertFalse(game.isGameOver());
+    }
+
+    @Test
+    void should_handle_fromScore_with_extreme_win() {
+        TennisGame game = TennisGame.fromScore("P1", "P2", 101, 99);
+        assertEquals("P1 wins", game.getScore());
+        assertTrue(game.isGameOver());
+        assertEquals(Optional.of("P1"), game.getGameWinner());
     }
 }

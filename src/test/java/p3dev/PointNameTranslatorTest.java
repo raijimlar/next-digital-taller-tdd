@@ -21,7 +21,7 @@ public class PointNameTranslatorTest {
     }
 
     static Stream<Integer> invalidPointsProvider() {
-        return Stream.of(-1, -5, 4, 10, 100);
+        return Stream.of(-1, -5, 4, 10, 100, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     @ParameterizedTest(name = "{0} → \"{1}\"")

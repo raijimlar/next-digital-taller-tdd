@@ -15,7 +15,7 @@ public class TennisGameMockTest {
     private ScoreStateResolver mockResolver;
 
     @Mock
-    private IScoreState mockState;
+    private ScoreState mockState;
 
     @Test
     void should_delegate_score_to_state_resolver() {
@@ -51,7 +51,7 @@ public class TennisGameMockTest {
         game.getScore();
         game.getScore();
 
-        // Assert: se llama al resolver cada vez, no se cachea
+        // Assert
         verify(mockResolver, times(3)).resolve(player1, player2);
     }
 

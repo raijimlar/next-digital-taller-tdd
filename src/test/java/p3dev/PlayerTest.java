@@ -71,4 +71,28 @@ public class PlayerTest {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> new Player(invalidName));
     }
+
+    @Test
+    void should_accept_single_character_name() {
+        Player player = new Player("A");
+        assertEquals("A", player.getName());
+        assertEquals(0, player.getPoints());
+    }
+
+    @Test
+    void should_handle_name_with_special_characters() {
+        Player player = new Player("O'Brien-Smith");
+        assertEquals("O'Brien-Smith", player.getName());
+    }
+
+    @Test
+    void should_handle_very_large_initial_points() {
+        Player player = new Player("Player", 1_000_000);
+        assertEquals(1_000_000, player.getPoints());
+    }
+
+    @Test
+    void should_throw_on_extreme_negative_initial_points() {
+        assertThrows(IllegalArgumentException.class, () -> new Player("Player", Integer.MIN_VALUE));
+    }
 }

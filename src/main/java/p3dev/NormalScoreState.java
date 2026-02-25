@@ -1,6 +1,6 @@
 package p3dev;
 
-public class NormalScoreState implements IScoreState {
+public class NormalScoreState implements ScoreState {
 
     private final PointNameTranslator translator;
 

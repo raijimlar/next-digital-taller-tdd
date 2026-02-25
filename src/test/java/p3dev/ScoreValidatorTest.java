@@ -13,44 +13,42 @@ public class ScoreValidatorTest {
 
     static Stream<Arguments> validGameScoreProvider() {
         return Stream.of(
-            // Normal scoring
             Arguments.of(0, 0),
             Arguments.of(1, 0),
             Arguments.of(0, 1),
             Arguments.of(2, 1),
             Arguments.of(3, 2),
             Arguments.of(3, 0),
-            // Straight wins
             Arguments.of(4, 0),
             Arguments.of(4, 1),
             Arguments.of(4, 2),
             Arguments.of(0, 4),
             Arguments.of(1, 4),
             Arguments.of(2, 4),
-            // Deuce zone
             Arguments.of(3, 3),
             Arguments.of(4, 3),
             Arguments.of(3, 4),
             Arguments.of(4, 4),
             Arguments.of(5, 4),
             Arguments.of(4, 5),
-            // Deuce zone wins
             Arguments.of(5, 3),
             Arguments.of(3, 5),
             Arguments.of(6, 4),
             Arguments.of(4, 6),
             Arguments.of(10, 8),
-            Arguments.of(8, 10)
+            Arguments.of(8, 10),
+            Arguments.of(100, 100),
+            Arguments.of(101, 99),
+            Arguments.of(1000, 1000),
+            Arguments.of(1001, 999)
         );
     }
 
     static Stream<Arguments> invalidGameScoreProvider() {
         return Stream.of(
-            // Negative
             Arguments.of(-1, 0),
             Arguments.of(0, -1),
             Arguments.of(-3, -2),
-            // Impossible: would have won earlier
             Arguments.of(5, 0),
             Arguments.of(5, 1),
             Arguments.of(5, 2),
@@ -63,11 +61,14 @@ public class ScoreValidatorTest {
             Arguments.of(3, 7),
             Arguments.of(10, 5),
             Arguments.of(5, 10),
-            // Impossible gap in deuce zone
             Arguments.of(7, 4),
             Arguments.of(4, 7),
             Arguments.of(10, 7),
-            Arguments.of(7, 10)
+            Arguments.of(7, 10),
+            Arguments.of(100, 0),
+            Arguments.of(0, 100),
+            Arguments.of(Integer.MAX_VALUE, 0),
+            Arguments.of(0, Integer.MAX_VALUE)
         );
     }
 
@@ -85,8 +86,6 @@ public class ScoreValidatorTest {
         assertThrows(InvalidScoreException.class, () -> ScoreValidator.validateGameScore(p1, p2));
     }
 
-    // --- Match score validation ---
-
     static Stream<Arguments> validMatchScoreProvider() {
         return Stream.of(
             Arguments.of(0, 0),
@@ -99,7 +98,12 @@ public class ScoreValidatorTest {
             Arguments.of(5, 3),
             Arguments.of(6, 4),
             Arguments.of(0, 4),
-            Arguments.of(3, 5)
+            Arguments.of(3, 5),
+            Arguments.of(4, 4),
+            Arguments.of(5, 4),
+            Arguments.of(5, 5),
+            Arguments.of(100, 100),
+            Arguments.of(101, 99)
         );
     }
 
@@ -112,7 +116,10 @@ public class ScoreValidatorTest {
             Arguments.of(7, 3),
             Arguments.of(3, 7),
             Arguments.of(6, 3),
-            Arguments.of(3, 6)
+            Arguments.of(3, 6),
+            Arguments.of(100, 0),
+            Arguments.of(0, 100),
+            Arguments.of(Integer.MAX_VALUE, 0)
         );
     }
 
@@ -132,17 +139,22 @@ public class ScoreValidatorTest {
             Arguments.of(0, 0, 0, 0),
             Arguments.of(2, 1, 3, 2),
             Arguments.of(3, 3, 4, 3),
-            Arguments.of(4, 2, 0, 0)
+            Arguments.of(4, 2, 0, 0),
+            Arguments.of(4, 4, 0, 0),
+            Arguments.of(4, 4, 3, 3),
+            Arguments.of(5, 3, 0, 0)
         );
     }
 
     static Stream<Arguments> invalidMatchStateProvider() {
         return Stream.of(
-            Arguments.of(4, 2, 1, 0),   // match over, p1Points != 0
-            Arguments.of(4, 2, 0, 1),   // match over, p1Points == 0 but p2Points != 0
+            Arguments.of(4, 2, 1, 0),
+            Arguments.of(4, 2, 0, 1),
             Arguments.of(7, 3, 0, 0),
             Arguments.of(2, 1, 7, 3),
-            Arguments.of(2, 1, 4, 2)
+            Arguments.of(2, 1, 4, 2),
+            Arguments.of(5, 3, 1, 0),
+            Arguments.of(5, 3, 0, 1)
         );
     }
 

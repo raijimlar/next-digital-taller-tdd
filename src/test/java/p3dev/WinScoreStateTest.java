@@ -56,7 +56,10 @@ public class WinScoreStateTest {
                 Arguments.of(0, 4),
                 Arguments.of(5, 3),
                 Arguments.of(3, 5),
-                Arguments.of(6, 4)
+                Arguments.of(6, 4),
+                Arguments.of(100, 98),
+                Arguments.of(1000, 998),
+                Arguments.of(Integer.MAX_VALUE, Integer.MAX_VALUE - 2)
         );
     }
 
@@ -72,7 +75,9 @@ public class WinScoreStateTest {
                 Arguments.of(3, 3),
                 Arguments.of(4, 3),
                 Arguments.of(3, 4),
-                Arguments.of(3, 0)
+                Arguments.of(3, 0),
+                Arguments.of(100, 99),
+                Arguments.of(1000, 1000)
         );
     }
 

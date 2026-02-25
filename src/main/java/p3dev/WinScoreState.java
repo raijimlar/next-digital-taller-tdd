@@ -1,6 +1,6 @@
 package p3dev;
 
-public class WinScoreState implements IScoreState {
+public class WinScoreState implements ScoreState {
 
     @Override
     public boolean applies(Player player1, Player player2) {

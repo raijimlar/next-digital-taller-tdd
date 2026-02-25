@@ -90,7 +90,9 @@ public class NormalScoreStateTest {
                 Arguments.of(4, 3),
                 Arguments.of(4, 0),
                 Arguments.of(5, 5),
-                Arguments.of(2, 4)  // p1 valid, p2 > 3
+                Arguments.of(2, 4),
+                Arguments.of(100, 100),
+                Arguments.of(Integer.MAX_VALUE, 0)
         );
     }
 

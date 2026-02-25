@@ -34,7 +34,9 @@ public class DeuceScoreStateTest {
                 Arguments.of(3, 3),
                 Arguments.of(4, 4),
                 Arguments.of(5, 5),
-                Arguments.of(10, 10)
+                Arguments.of(10, 10),
+                Arguments.of(100, 100),
+                Arguments.of(1000, 1000)
         );
     }
 
@@ -50,7 +52,9 @@ public class DeuceScoreStateTest {
                 Arguments.of(2, 2),
                 Arguments.of(4, 3),
                 Arguments.of(3, 4),
-                Arguments.of(5, 3)
+                Arguments.of(5, 3),
+                Arguments.of(100, 99),
+                Arguments.of(Integer.MAX_VALUE, 0)
         );
     }
 
